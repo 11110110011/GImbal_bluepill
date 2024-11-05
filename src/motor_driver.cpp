@@ -78,26 +78,26 @@ void motor_set_position_y(int steps)
 void homing_sequence()
 {
     // Move X axis towards microswitch until it is pressed
-    digitalWrite(DIR_PIN_X, HIGH); // Assuming HIGH moves towards microswitch
-    int steps = 1000;
-    for (int i = 0; i < 2000; i++)
-    {
-        step_motor_x(STEP_PIN_X);
-    }
-    
+    digitalWrite(DIR_PIN_X, LOW); // Assuming HIGH moves towards microswitch
+    // for (int i = 0; i < 29090; i++)
+    // {
+    //     step_motor_x(STEP_PIN_X);
+    // }
+
     while (!microswitch_x_pressed())
     {
         step_motor_x(STEP_PIN_X);
-        steps++;
     }
     current_position_x = 0; // Zero position established for X
-    Serial.print("Steps moved (: ");
-    Serial.println(steps);
 
-    // Search for Y home position within +15 to -15 degrees
-    // const int steps_per_degree = 400 / 360; // Assuming 200 steps per revolution
     const int max_steps = 2000;
     int steps_moved = 0;
+
+    // digitalWrite(DIR_PIN_Y, LOW);
+    // for (int i = 0; i < 2450; i++)
+    // {
+    //     step_motor_y(STEP_PIN_Y);
+    // }
 
     // Move Y axis towards microswitch until it is pressed
     // digitalWrite(DIR_PIN_Y, LOW); // Assuming LOW moves towards microswitch
@@ -116,7 +116,11 @@ void homing_sequence()
     // If microswitch is pressed, set current position
     if (microswitch_y_pressed())
     {
-        current_position_y = steps_moved;
+        for (int i = 0; i < 100; i++) //correction of microswitch proximity gap
+        {
+            step_motor_y(STEP_PIN_Y);
+        }
+        current_position_y = 0;
         return;
     }
 
@@ -131,17 +135,17 @@ void homing_sequence()
     // If microswitch is pressed, set current position
     if (microswitch_y_pressed())
     {
-        current_position_y = steps_moved;
+        current_position_y = 0;
         return;
     }
 
     // If not found, move back to center position
-    digitalWrite(DIR_PIN_Y, HIGH);
-    for (int i = 0; i < abs(steps_moved); i++)
-    {
-        step_motor_y(STEP_PIN_Y);
-    }
-    current_position_y = 0; // Set position back to center
+    // digitalWrite(DIR_PIN_Y, HIGH);
+    // for (int i = 0; i < abs(steps_moved); i++)
+    // {
+    //     step_motor_y(STEP_PIN_Y);
+    // }
+    // current_position_y = 0; // Set position back to center
 }
 
 void check_y()
@@ -162,6 +166,4 @@ void check_y()
         step_motor_x(STEP_PIN_X);
     }
     delayMicroseconds(1000);
-
-
 }

@@ -56,12 +56,15 @@ void process_mavlink_message() {
                 float t4 = +1.0f - 2.0f * (ysqr + q[3] * q[3]);
                 yaw = atan2f(t3, t4);
 
-                // Convert angles from radians to steps (assuming 200 steps per revolution)
-                const float steps_per_rev = 200.0f;
-                const float rad_to_steps = steps_per_rev / (2 * M_PI);
+                // Convert angles from radians to steps (assuming 29090 steps per revolution)
+                const float steps_per_rev_x = 29090.0f;
+                const float rad_to_steps_x = steps_per_rev_x / (2 * M_PI);
 
-                int desired_position_x = (int)(pitch * rad_to_steps);
-                int desired_position_y = (int)(yaw * rad_to_steps);
+                const float steps_per_rev_y = 9800.0f;
+                const float rad_to_steps_y = steps_per_rev_y / (2 * M_PI);
+
+                int desired_position_x = (int)(pitch * rad_to_steps_x);
+                int desired_position_y = (int)(yaw * rad_to_steps_y);
 
                 // Calculate steps relative to current position
                 int steps_to_move_x = desired_position_x - current_position_x;
