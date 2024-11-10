@@ -16,7 +16,7 @@ void motor_set_position_x(int steps);
 void motor_set_position_y(int steps);
 bool microswitch_x_pressed();
 bool microswitch_y_pressed();
-void homing_sequence();
+void home_motors();
 void check_y();
 
 #endif

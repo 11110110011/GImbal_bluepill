@@ -2,7 +2,7 @@ import time
 from pymavlink import mavutil
 
 # Constants
-SERIAL_PORT = 'COM11'  # Replace with your actual COM port
+SERIAL_PORT = 'COM6'  # Replace with your actual COM port
 BAUD_RATE = 115200
 TARGET_SYSTEM = 1
 TARGET_COMPONENT = 1
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         while True:
             # Send command to set gimbal attitude
-            send_gimbal_command(mavlink_connection, 90, 100, 200)  # Example: tilt 1000 centidegrees, roll 0, pan 0
+            send_gimbal_command(mavlink_connection, 900, 1000, 2000)  # Example: tilt 1000 centidegrees, roll 0, pan 0
             
             # Wait for a short delay
             time.sleep(1)

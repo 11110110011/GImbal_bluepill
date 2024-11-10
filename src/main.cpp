@@ -1,11 +1,14 @@
 #include "motor_driver.h"
 #include "mavlink_processor.h"
 
+// Declare the home_motors function
+void home_motors();
+
 void setup() {
     motor_driver_init();        // Initialize motor driver
     mavlink_processor_init();   // Initialize MAVLink processor
 
-    homing_sequence();          // Perform homing to establish zero position
+    home_motors();          // Perform homing to establish zero position
     // check_y();
 }
 
