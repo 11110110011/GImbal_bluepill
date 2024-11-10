@@ -124,25 +124,61 @@ void home_motors()
     Serial.println("X axis homed");
 
     // Home Y axis
+    Serial.println("Homing Y axis...");
+    bool microswitch_found = false;
+    int steps = 0;
+
+    // Move in one direction first
     digitalWrite(DIR_PIN_Y, LOW); // Move towards the microswitch
-    while (!microswitch_y_pressed())
+    while (!microswitch_y_pressed() && steps < 2000)
     {
         digitalWrite(STEP_PIN_Y, HIGH);
         delayMicroseconds(STEPPER_DELAY_Y);
         digitalWrite(STEP_PIN_Y, LOW);
         delayMicroseconds(STEPPER_DELAY_Y);
+        steps++;
     }
-    current_position_y = 0;
-    target_position_y = 0;
-    Serial.println("Y axis homed");
+
+    if (microswitch_y_pressed())
+    {
+        microswitch_found = true;
+    }
+    else
+    {
+        // Move in the opposite direction
+        digitalWrite(DIR_PIN_Y, HIGH); // Move away from the microswitch
+        steps = 0;
+        while (!microswitch_y_pressed() && steps < 2000)
+        {
+            digitalWrite(STEP_PIN_Y, HIGH);
+            delayMicroseconds(STEPPER_DELAY_Y);
+            digitalWrite(STEP_PIN_Y, LOW);
+            delayMicroseconds(STEPPER_DELAY_Y);
+            steps++;
+        }
+
+        if (microswitch_y_pressed())
+        {
+            microswitch_found = true;
+            for (int i = 0; i < 100; i++)
+            {
+            digitalWrite(STEP_PIN_Y, HIGH);
+            delayMicroseconds(STEPPER_DELAY_Y);
+            digitalWrite(STEP_PIN_Y, LOW);
+            delayMicroseconds(STEPPER_DELAY_Y);
+            }
+            
+        }
+    }
+
+    if (microswitch_found)
+    {
+        current_position_y = 0;
+        target_position_y = 0;
+        Serial.println("Y axis homed");
+    }
+    else
+    {
+        Serial.println("Y axis homing failed: microswitch not found within 2000 steps in both directions");
+    }
 }
-
-// void setup() {
-//     motor_driver_init();
-//     motor_set_position_x(100); // Example target position
-//     motor_set_position_y(100); // Example target position
-// }
-
-// void loop() {
-//     // Add any additional logic here
-// }
